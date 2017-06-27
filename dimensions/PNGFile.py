@@ -42,7 +42,7 @@ class PNGFile(object):
 
         # confirm PNG format
         magic = self.fp.read(len(SIGNATURE[0]))
-        if magic != SIGNATURE:
+        if magic not in SIGNATURE:
             # TODO: raise appropriate exception
             print('%s is not PNG signature' % magic)
             exit()
@@ -55,7 +55,7 @@ class PNGFile(object):
             # parse and store a chunk
             chunk = {}
             chunk['length'] = l.unpack(self.fp.read(l.size))[0]
-            chunk['type'] = ''.join(t.unpack(self.fp.read(t.size)))
+            chunk['type'] = b''.join(t.unpack(self.fp.read(t.size))).decode('ascii')
             parse_data = '%s_data' % chunk['type']
             if hasattr(self, parse_data):
                 chunk['data'] = getattr(self, parse_data)()
