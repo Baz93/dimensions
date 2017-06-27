@@ -11,7 +11,7 @@ import logging
 import struct
 
 
-SIGNATURE = ('GIF87a', 'GIF89a')
+SIGNATURE = (b'GIF87a', b'GIF89a')
 
 
 class GIFFile(object):

@@ -9,17 +9,17 @@ JPG file parser.
 
 import logging
 import struct
-import StringIO
+from io import StringIO
 
 
-SIGNATURE = ('\377\330')
+SIGNATURE = (b'\377\330',)
 
 
 class JPEGFile(object):
     """A JPEG Image"""
 
     def __init__(self, fp):
-        #self.fp = StringIO.StringIO(str(fp.read()))
+        # self.fp = StringIO.StringIO(str(fp.read()))
         self.fp = fp
         self.size = None  # set by _load()
         self._load()
@@ -27,7 +27,7 @@ class JPEGFile(object):
     def _load(self):
 
         # confirm JPEG format
-        magic = self.fp.read(len(SIGNATURE))
+        magic = self.fp.read(len(SIGNATURE[0]))
         if magic not in SIGNATURE:
             # TODO: raise appropriate exception
             print('%s is not a JPG signature' % magic)
@@ -46,7 +46,7 @@ class JPEGFile(object):
                 if (ord(b) >= 0xC0 and ord(b) <= 0xC3):
                     self.fp.read(3)  # skip payload len
                     y, x = struct.unpack('>HH', self.fp.read(4))
-                    break;
+                    break
                 else:  # skip over the length of this segment payload
                     self.fp.read(int(struct.unpack('>H', self.fp.read(2))[0])-2)
                 b = self.fp.read(1)

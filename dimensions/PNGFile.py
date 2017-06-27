@@ -11,7 +11,7 @@ import logging
 import struct
 
 
-SIGNATURE = ('\211PNG\r\n\032\n')
+SIGNATURE = (b'\211PNG\r\n\032\n',)
 
 
 class Chunk(object):
@@ -41,7 +41,7 @@ class PNGFile(object):
     def _load(self):
 
         # confirm PNG format
-        magic = self.fp.read(len(SIGNATURE))
+        magic = self.fp.read(len(SIGNATURE[0]))
         if magic != SIGNATURE:
             # TODO: raise appropriate exception
             print('%s is not PNG signature' % magic)

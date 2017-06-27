@@ -12,9 +12,7 @@ See README.txt for details.
 import logging
 import struct
 
-import PNGFile
-import GIFFile
-import JPEGFile
+from dimensions import PNGFile, GIFFile, JPEGFile
 
 
 def get_dimensions(filenames):
@@ -28,10 +26,10 @@ def get_dimensions(filenames):
 
             img_types = (PNGFile, GIFFile, JPEGFile)
             for img_type in img_types:
-                sig = str(getattr(img_type, 'SIGNATURE')[0])
-                magic = fp.read(len(sig))
+                sig = getattr(img_type, 'SIGNATURE')
+                magic = fp.read(len(sig[0]))
                 fp.seek(0)
-                if magic == sig:
+                if magic in sig:
                     cls = img_type.__name__.split('.')[-1]
                     img = getattr(img_type, cls)(fp)
                     x, y = img.size
@@ -83,4 +81,4 @@ def cli():
         print('%s\n  width: %d\n  height: %d\n  content-type: %s' % (filename, x, y, content_type))
 
 if '__main__' == __name__:
-    dimensions()
+    cli()
